@@ -1,0 +1,57 @@
+
+services:
+  postgres:
+    image: imresamu/postgis:14-3.5-alpine
+    container_name: parking-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: parking
+      POSTGRES_PASSWORD: password1234
+      POSTGRES_DB: parking_prod
+      TZ: Asia/Seoul
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    container_name: parking-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--databases", "16"]
+    volumes:
+      - redisdata:/data
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    container_name: parking-backend
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      # 필요 시 환경변수로 오버라이드 가능 (application-prod.yml을 이미 설정했다면 생략 가능)
+      # SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/parking_prod
+      # SPRING_DATASOURCE_USERNAME: parking
+      # SPRING_DATASOURCE_PASSWORD: password1234
+      # SPRING_DATA_REDIS_HOST: redis
+      # SPRING_DATA_REDIS_PORT: 6379
+    ports:
+      - "8080:8080"
+
+  nginx:
+    build: ./frontend
+    container_name: parking-nginx
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"   # 외부 접속 포트 → 컨테이너 80 (Nginx)
+
+volumes:
+  pgdata:
+  redisdata:
