@@ -7,3 +7,7 @@ spring:
   profiles:
     default: dev
 
+api:
+  key: 497867786e63746836314870644f47
+  url: http://openapi.seoul.go.kr:8088
+
