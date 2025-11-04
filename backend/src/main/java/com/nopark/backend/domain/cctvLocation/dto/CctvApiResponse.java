@@ -1,5 +1,6 @@
 package com.nopark.backend.domain.cctvLocation.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -7,7 +8,8 @@ import java.util.List;
 @Data
 public class CctvApiResponse {
 
-    private TbOpendataFixedcctv TbOpendataFixedcctv;
+    @JsonProperty("TbOpendataFixedcctv")
+    private TbOpendataFixedcctv body;
 
     @Data
     public static class TbOpendataFixedcctv {
@@ -23,11 +25,17 @@ public class CctvApiResponse {
 
         @Data
         public static class Row {
+            @JsonProperty("FIX_CCTV_ADDR")
             private String FIX_CCTV_ADDR;
+            @JsonProperty("LAT")
             private String LAT;
+            @JsonProperty("LOT")
             private String LOT;
+            @JsonProperty("CGG_CD")
             private String CGG_CD;
+            @JsonProperty("CRDN_BRNCH_NM")
             private String CRDN_BRNCH_NM;
+            @JsonProperty("GRNDS_SE")
             private String GRNDS_SE;
         }
     }
