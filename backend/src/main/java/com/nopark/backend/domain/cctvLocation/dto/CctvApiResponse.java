@@ -14,11 +14,11 @@ public class CctvApiResponse {
     @Data
     public static class TbOpendataFixedcctv {
         private Integer list_total_count;
-        private Result RESULT;
+        private RESULT RESULT;
         private List<Row> row;
 
         @Data
-        public static class Result {
+        public static class RESULT {
             private String CODE;
             private String MESSAGE;
         }
